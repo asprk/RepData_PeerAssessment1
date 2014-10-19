@@ -1,25 +1,101 @@
 ---
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
+title: "PA1_template"
+output: html_document
 ---
 
+This is an R Markdown document. 
+plotting bargraph 
 
-## Loading and preprocessing the data
+```{r}
+unzip("activity.zip")
+data=read.csv("activity.csv")
+data$dat=as.Date(data$date)
+data=data[!is.na(data$steps),]
+data$dat=as.factor(data$dat)
+mean_data=tapply(data$steps,data$dat,sum)
+mean_data=as.data.frame(mean_data)
+data$date=as.character(data$date)
+
+mean_data$date=tapply(data$date,data$dat,unique)
+mean_data$date=as.character(mean_data$date)
+mean_data$steps=mean_data$mean_data
+mean_data=mean_data[,2:3]
+barplot(mean_data$steps)
+
+```
+
+producing mean and median
+
+```{r}
+mean=mean(mean_data$steps)
+median=median(mean_data$steps)
+mean
+median
+```
+
+for second part
+finding the maximum value of steps for 5 minutes interval
+```{r}
+max(data$steps)
+```
+
+
+plot taking every 5 minutes interval
+
+```{r}
+p=data$interval
+data$minutes=p-100*floor(p/100)
+data$hours=floor(p/100)
+data$comb=paste(data$date,data$hours,data$minutes,sep=":")
+data$time=strptime(data$comb,format="%Y-%m-%d:%H:%M")
+plot(data$time,data$steps,type="l")
+```
+
+
+to find the number of missing values and assigning the median to them
+
+```{r}
+data1=read.csv("activity.csv")
+p=data1$interval
+data1$minutes=p-100*floor(p/100)
+data1$hours=floor(p/100)
+data1$comb=paste(data1$date,data1$hours,data1$minutes,sep=":")
+data1$time=strptime(data1$comb,format="%Y-%m-%d:%H:%M")
+
+table(is.na(data1$steps))[[2]]
+data1[is.na(data1$steps),1]=median/(24*12)
+```
 
 
 
-## What is mean total number of steps taken per day?
+plotting the values after including the filled gaps 
+
+```{r}
+data1$dat=as.Date(data1$date)
+data1=data1[!is.na(data1$steps),]
+data1$dat=as.factor(data1$dat)
+mean_data=tapply(data1$steps,data1$dat,sum)
+mean_data=as.data.frame(mean_data)
+data1$date=as.character(data1$date)
+
+mean_data$date=tapply(data1$date,data1$dat,unique)
+mean_data$date=as.character(mean_data$date)
+mean_data$steps=mean_data$mean_data
+mean_data=mean_data[,2:3]
+barplot(mean_data$steps)
+```
 
 
 
-## What is the average daily activity pattern?
+finding new mean and median
+```{r}
+mean=mean(mean_data$steps)
+median=median(mean_data$steps)
+mean
+median
+```
+
+though the mean changed median didnt change
 
 
 
-## Imputing missing values
-
-
-
-## Are there differences in activity patterns between weekdays and weekends?
